@@ -17,7 +17,9 @@ void onButton_popup(uint32_t btn){
 		case SCE_CTRL_LEFT: profile_dec(&settings[id], 1); break;
 		case SCE_CTRL_SQUARE: settings_reset(id); break;
 		case SCE_CTRL_SELECT: settings_resetAllPopups(); break;
-		case SCE_CTRL_CIRCLE: 
+		case SCE_CTRL_CIRCLE:
+		case SCE_CTRL_CROSS:
+			if (btn != gui_cancelButton) break;
 			settings_save();
 			gui_popupShowSuccess("$G Saving popups", "Done !", TTL_POPUP_SHORT);
 			gui_openMenuParent();
@@ -25,6 +27,7 @@ void onButton_popup(uint32_t btn){
 		case SCE_CTRL_START: 
 			settings_save();
 			gui_popupShowSuccess("$G Saving popups", "Done !", TTL_POPUP_SHORT);
+			// [[fallthrough]];
 		default: onButton_genericEntries(btn); break;
 	}
 }
@@ -38,7 +41,9 @@ void onButton_settings(uint32_t btn){
 		case SCE_CTRL_SELECT: 
 			settings_resetAll(); 
 			break;
-		case SCE_CTRL_CIRCLE: 
+		case SCE_CTRL_CIRCLE:
+		case SCE_CTRL_CROSS:
+			if (btn != gui_cancelButton) break;
 			settings_save();
 			gui_popupShowSuccess("$G Saving settings", "Done !", TTL_POPUP_SHORT);
 			gui_openMenuParent();
@@ -46,6 +51,7 @@ void onButton_settings(uint32_t btn){
 		case SCE_CTRL_START: 
 			settings_save();
 			gui_popupShowSuccess("$G Saving settings", "Done !", TTL_POPUP_SHORT);
+			// [[fallthrough]];
 		default: onButton_genericEntries(btn); break;
 	}
 	if (id == SETT_THEME || btn == SCE_CTRL_SELECT) 
@@ -63,7 +69,7 @@ static struct Menu menu_settings = (Menu){
 	.parent = MENU_MAIN_SETTINGS_ID,
 	.name = "$| SETTINGS > GLOBAL", 
 	.footer = 	"$<$>${$}CHANGE $SRESET $;RESET ALL     "
-				"$CBACK                          $:CLOSE",
+				"$nBACK                          $:CLOSE",
 	.onButton = onButton_settings,
 	.num = SIZE(menu_settings_entries), 
 	.entries = menu_settings_entries};
@@ -85,7 +91,7 @@ static struct Menu menu_popup = (Menu){
 	.parent = MENU_MAIN_SETTINGS_ID,
 	.name = "$I SETTINGS > POPUPS", 
 	.footer = 	"$<$>${$}CHANGE $SRESET $;RESET ALL     "
-				"$CBACK                          $:CLOSE",
+				"$nBACK                          $:CLOSE",
 	.onButton = onButton_popup,
 	.num = SIZE(menu_popup_entries), 
 	.entries = menu_popup_entries};

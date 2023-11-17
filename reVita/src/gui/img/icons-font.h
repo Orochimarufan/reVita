@@ -112,10 +112,10 @@ typedef enum {
 	ICON_HEADPHONES,	// "h"
 	ICON_TOUCH,			// "i"
 	ICON_SWIPE,			// "j"
-	NOI_107,			// "k"
+	ICON_BTN_CONFIRM,	// "k" (virtual)
 	ICON_RS_LEFT,		// "l"
 	ICON_STICKY,		// "m"
-	NOI_110,			// "n"
+	ICON_BTN_CANCEL,	// "n" (virtual)
 	ICON_PSV_LEFT,		// "o"
 	ICON_BTN_POWER,		// "p"
 	ICON_GY_LEFT,		// "q"

@@ -30,7 +30,7 @@ static struct Menu menu_touch = (Menu){
 	.parent = MENU_MAIN_PROFILE_ID,
 	.name = "$F PROFILE > TOUCH", 
 	.footer = 	"$<$>${$}CHANGE $SRESET $;RESET ALL     "
-				"$CBACK                          $:CLOSE",
+				"$nBACK                          $:CLOSE",
 	.onButton = onButton_touch,
 	.num = SIZE(menu_touch_entries), 
 	.entries = menu_touch_entries};

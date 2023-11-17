@@ -20,54 +20,53 @@ enum PROFILE_ACTIONS{
 };
 
 void onButton_profiles(uint32_t btn){
-	switch (btn) {
-		case SCE_CTRL_CROSS:
-			switch (gui_getEntry()->dataUint){
-				case PROFILE_LOCAL_SAVE:   
-					profile_saveLocal(); 
-					isSafeBoot = false;
-					gui_popupShowSuccess("$G Profile saved", profile.titleid, TTL_POPUP_SHORT);
-					break;
-				case PROFILE_LOCAL_LOAD:   
-					profile_loadLocal(); 
-					gui_popupShowSuccess("$H Profile loaded", profile.titleid, TTL_POPUP_SHORT);
-					break;
-				case PROFILE_LOCAL_RESET:  
-					profile_resetLocal(); 
-					gui_popupShowSuccess("$J Profile reset", profile.titleid, TTL_POPUP_SHORT);
-					break;
-				case PROFILE_LOCAL_DELETE: 
-					profile_deleteLocal(); 
-					gui_popupShowSuccess("$J Profile removed", profile.titleid, TTL_POPUP_SHORT);
-					break;
-				case PROFILE_GLOBAL_SAVE:  
-					profile_saveAsGlobal();
-					gui_popupShowSuccess("$G Profile saved", "as Global default", TTL_POPUP_SHORT); 
-					break;
-				case PROFILE_GLOBAL_LOAD:  
-					profile_loadFromGlobal();
-					gui_popupShowSuccess("$H Profile loaded", "from Global default", TTL_POPUP_SHORT);
-					break;
-				case PROFILE_GLOBAL_RESET: 
-					profile_resetGlobal();
-					gui_popupShowSuccess("$J Profile reset", "Global default", TTL_POPUP_SHORT); 
-					break;
-				case PROFILE_SHARED_SAVE:  
-					profile_saveAsShared();
-					gui_popupShowSuccess("$G Profile saved", "as Shared", TTL_POPUP_SHORT); 
-					break;
-				case PROFILE_SHARED_LOAD:  
-					profile_loadFromShared(); 
-					gui_popupShowSuccess("$H Profile loaded", "from Shared", TTL_POPUP_SHORT);
-					break;
-				case PROFILE_SHARED_DELETE:
-					profile_deleteShared();
-					gui_popupShowSuccess("$J Profile removed", "Shared", TTL_POPUP_SHORT);
-					break;
-				default: break;
-			}
-			break;
-		default: onButton_generic(btn);
+	if (btn == gui_confirmButton) {
+		switch (gui_getEntry()->dataUint){
+			case PROFILE_LOCAL_SAVE:   
+				profile_saveLocal(); 
+				isSafeBoot = false;
+				gui_popupShowSuccess("$G Profile saved", profile.titleid, TTL_POPUP_SHORT);
+				break;
+			case PROFILE_LOCAL_LOAD:   
+				profile_loadLocal(); 
+				gui_popupShowSuccess("$H Profile loaded", profile.titleid, TTL_POPUP_SHORT);
+				break;
+			case PROFILE_LOCAL_RESET:  
+				profile_resetLocal(); 
+				gui_popupShowSuccess("$J Profile reset", profile.titleid, TTL_POPUP_SHORT);
+				break;
+			case PROFILE_LOCAL_DELETE: 
+				profile_deleteLocal(); 
+				gui_popupShowSuccess("$J Profile removed", profile.titleid, TTL_POPUP_SHORT);
+				break;
+			case PROFILE_GLOBAL_SAVE:  
+				profile_saveAsGlobal();
+				gui_popupShowSuccess("$G Profile saved", "as Global default", TTL_POPUP_SHORT); 
+				break;
+			case PROFILE_GLOBAL_LOAD:  
+				profile_loadFromGlobal();
+				gui_popupShowSuccess("$H Profile loaded", "from Global default", TTL_POPUP_SHORT);
+				break;
+			case PROFILE_GLOBAL_RESET: 
+				profile_resetGlobal();
+				gui_popupShowSuccess("$J Profile reset", "Global default", TTL_POPUP_SHORT); 
+				break;
+			case PROFILE_SHARED_SAVE:  
+				profile_saveAsShared();
+				gui_popupShowSuccess("$G Profile saved", "as Shared", TTL_POPUP_SHORT); 
+				break;
+			case PROFILE_SHARED_LOAD:  
+				profile_loadFromShared(); 
+				gui_popupShowSuccess("$H Profile loaded", "from Shared", TTL_POPUP_SHORT);
+				break;
+			case PROFILE_SHARED_DELETE:
+				profile_deleteShared();
+				gui_popupShowSuccess("$J Profile removed", "Shared", TTL_POPUP_SHORT);
+				break;
+			default: break;
+		}
+	} else {
+		onButton_generic(btn);
 	}
 }
 
@@ -94,7 +93,7 @@ static struct Menu menu_profiles = (Menu){
 	.id = MENU_PROFILE_ID, 
 	.parent = MENU_MAIN_PROFILE_ID,
 	.name = "$/ PROFILE > MANAGE PROFILES", 
-	.footer = 	"$XSELECT                 $CBACK $:CLOSE",
+	.footer = 	"$kSELECT                 $nBACK $:CLOSE",
 	.onButton = onButton_profiles,
 	.num = SIZE(menu_profiles_entries), 
 	.entries = menu_profiles_entries};

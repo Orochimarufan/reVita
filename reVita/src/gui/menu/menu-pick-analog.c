@@ -7,19 +7,19 @@
 
 void onButton_pickAnalog(uint32_t btn){
 	enum REMAP_ACTION* actn = gui_menu->dataPtr;
-	switch (btn) {
-		case SCE_CTRL_CROSS:
-			*actn = gui_getEntry()->dataUint;
-			if (gui_menu->next == MENU_REMAP_ID){
-				if (ui_ruleEditedIdx >= 0) 
-					profile.remaps[ui_ruleEditedIdx] = ui_ruleEdited;
-				else
-					profile_addRemapRule(ui_ruleEdited);
-			}
-			gui_openMenuNext();
-			break;
-		case SCE_CTRL_CIRCLE: gui_openMenuPrev(); break;
-		default: onButton_generic(btn);
+	if (btn == gui_confirmButton) {
+		*actn = gui_getEntry()->dataUint;
+		if (gui_menu->next == MENU_REMAP_ID){
+			if (ui_ruleEditedIdx >= 0) 
+				profile.remaps[ui_ruleEditedIdx] = ui_ruleEdited;
+			else
+				profile_addRemapRule(ui_ruleEdited);
+		}
+		gui_openMenuNext();
+	} else if (btn == gui_cancelButton) {
+		gui_openMenuPrev();
+	} else {
+		onButton_generic(btn);
 	}
 }
 
@@ -32,7 +32,7 @@ static struct Menu menu_pick_analog_left = (Menu){
 	.id = MENU_PICK_ANALOG_LEFT_ID, 
 	.parent = MENU_REMAP_TRIGGER_TYPE_ID,
 	.name = "$L SELECT ANALOG STICK DIRECTION", 
-	.footer = 	"$XSELECT                 $CBACK $:CLOSE",
+	.footer = 	"$kSELECT                 $nBACK $:CLOSE",
 	.onButton = onButton_pickAnalog,
 	.num = SIZE(menu_pick_analog_left_entries), 
 	.entries = menu_pick_analog_left_entries};
@@ -46,7 +46,7 @@ static struct Menu menu_pick_analog_right = (Menu){
 	.id = MENU_PICK_ANALOG_RIGHT_ID, 
 	.parent = MENU_REMAP_TRIGGER_TYPE_ID,
 	.name = "$l SELECT ANALOG STICK DIRECTION", 
-	.footer = 	"$XSELECT                 $CBACK $:CLOSE",
+	.footer = 	"$kSELECT                 $nBACK $:CLOSE",
 	.onButton = onButton_pickAnalog,
 	.num = SIZE(menu_pick_analog_right_entries), 
 	.entries = menu_pick_analog_right_entries};

@@ -9,29 +9,25 @@
 #include "menu.h"
 
 void onButton_main(uint32_t btn){
-	switch (btn) {
-		case SCE_CTRL_CROSS:
-			gui_openMenu(gui_menu->entries[gui_menu->idx].dataUint);
-			gui_setIdx(0);
-			break;
-		case SCE_CTRL_CIRCLE:
-			gui_close();
-			remap_setup();
-			break;
-		case SCE_CTRL_SELECT:
-			settings[SETT_REMAP_ENABLED].v.b = !settings[SETT_REMAP_ENABLED].v.b;
-			break;
-		default: onButton_generic(btn);
+	if (btn == gui_confirmButton) {
+		gui_openMenu(gui_menu->entries[gui_menu->idx].dataUint);
+		gui_setIdx(0);
+	} else if (btn == gui_cancelButton) {
+		gui_close();
+		remap_setup();
+	} else if (btn == SCE_CTRL_SELECT) {
+		settings[SETT_REMAP_ENABLED].v.b = !settings[SETT_REMAP_ENABLED].v.b;
+	} else {
+		onButton_generic(btn);
 	}
 }
 
 void onButton_main_submenu(uint32_t btn){
-	switch (btn) {
-		case SCE_CTRL_CROSS:
-			gui_openMenu(gui_menu->entries[gui_menu->idx].dataUint);
-			gui_setIdx(0);
-			break;
-		default: onButton_generic(btn);
+	if (btn == gui_confirmButton) {
+		gui_openMenu(gui_menu->entries[gui_menu->idx].dataUint);
+		gui_setIdx(0);
+	} else {
+		onButton_generic(btn);
 	}
 }
 
@@ -74,7 +70,7 @@ static struct Menu menu_main_profile = (Menu){
 	.id = MENU_MAIN_PROFILE_ID, 
 	.parent = MENU_MAIN_ID,
 	.name = "$X PROFILE",
-	.footer = 	"$XSELECT $CBACK $;SECONDARY     $:CLOSE",
+	.footer = 	"$kSELECT $nBACK $;SECONDARY     $:CLOSE",
 	.onButton = onButton_main_profile,
 	.onDrawHeader = onDrawHeader_main_profile,
 	.num = SIZE(menu_main_profile_entries), 
@@ -88,7 +84,7 @@ static struct Menu menu_main_settings = (Menu){
 	.id = MENU_MAIN_SETTINGS_ID, 
 	.parent = MENU_MAIN_ID,
 	.name = "$| SETTINGS",
-	.footer = 	"$XSELECT $CBACK                 $:CLOSE",
+	.footer = 	"$kSELECT $nBACK                 $:CLOSE",
 	.onButton = onButton_main_submenu,
 	.num = SIZE(menu_main_settings_entries), 
 	.entries = menu_main_settings_entries};
@@ -100,7 +96,7 @@ static struct Menu menu_main_developer = (Menu){
 	.id = MENU_MAIN_DEVELOPER_ID, 
 	.parent = MENU_MAIN_ID,
 	.name = "$b DEVELOPER",
-	.footer = 	"$XSELECT $CBACK                 $:CLOSE",
+	.footer = 	"$kSELECT $nBACK                 $:CLOSE",
 	.onButton = onButton_main_submenu,
 	.num = SIZE(menu_main_developer_entries), 
 	.entries = menu_main_developer_entries};
@@ -114,7 +110,7 @@ static struct MenuEntry menu_main_entries[] = {
 static struct Menu menu_main = (Menu){
 	.id = MENU_MAIN_ID, 
 	.name = "$P MAIN MENU",
-	.footer = 	"$XSELECT $;TOGGLE             $C$:CLOSE",
+	.footer = 	"$kSELECT $;TOGGLE             $n$:CLOSE",
 	.onButton = onButton_main,
 	.onDrawHeader = onDrawHeader_main,
 	.num = SIZE(menu_main_entries), 

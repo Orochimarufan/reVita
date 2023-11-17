@@ -1,3 +1,4 @@
+#include <psp2common/ctrl.h>
 #include <vitasdkkern.h>
 #include "../../common.h"
 #include "../../fio/hotkeys.h"
@@ -7,22 +8,21 @@
 
 void onButton_hotkeys(uint32_t btn){
 	ProfileEntry* pe = gui_getEntry()->dataPEButton;
-	switch (btn) {
-		case SCE_CTRL_CROSS:
-			gui_openMenuSmartPtr(MENU_PICK_BUTTON_ID, 
-				gui_menu->id, gui_menu->id, &pe->v.u); 
-			break;		
-		case SCE_CTRL_TRIANGLE:
-			gui_getEntry()->dataPEButton->v.u = 0;
-			break;
-		case SCE_CTRL_SQUARE: hotkeys_reset(pe->id); break;
-		case SCE_CTRL_SELECT: hotkeys_resetAll(); break;
-		case SCE_CTRL_CIRCLE: 
-			hotkeys_save(); 
-			gui_popupShowSuccess("$G Saving hotkeys", "Done !", TTL_POPUP_SHORT);
-			gui_openMenuPrev();
-			break;
-		default: onButton_generic(btn);break;
+	if (btn == gui_confirmButton) {
+		gui_openMenuSmartPtr(MENU_PICK_BUTTON_ID,
+			gui_menu->id, gui_menu->id, &pe->v.u);
+	} else if (btn == SCE_CTRL_TRIANGLE) {
+		gui_getEntry()->dataPEButton->v.u = 0;
+	} else if (btn == SCE_CTRL_SQUARE) {
+		hotkeys_reset(pe->id);
+	} else if (btn == SCE_CTRL_SELECT) {
+		hotkeys_resetAll();
+	} else if (btn == gui_cancelButton) {
+		hotkeys_save(); 
+		gui_popupShowSuccess("$G Saving hotkeys", "Done !", TTL_POPUP_SHORT);
+		gui_openMenuPrev();
+	} else {
+		onButton_generic(btn);
 	}
 }
 
@@ -53,8 +53,8 @@ static struct Menu menu_hotkeys = (Menu){
 	.id = MENU_HOTKEYS_ID, 
 	.parent = MENU_MAIN_SETTINGS_ID,
 	.name = "$c SETTINGS > HOTKEYS", 
-	.footer = 	"$XSELECT $TCLEAR $SRESET $;RESET ALL   "
-				"$CBACK                          $:CLOSE",
+	.footer = 	"$kSELECT $TCLEAR $SRESET $;RESET ALL   "
+				"$nBACK                          $:CLOSE",
 	.onButton = onButton_hotkeys,
 	.num = SIZE(menu_hotkeys_entries), 
 	.entries = menu_hotkeys_entries};

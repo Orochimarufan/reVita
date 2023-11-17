@@ -123,10 +123,11 @@ void onButton_null(uint32_t btn){
 }
 
 void onButton_generic(uint32_t btn){
+	if (btn == gui_cancelButton)
+		return gui_openMenuParent();
 	switch (btn) {
 		case SCE_CTRL_DOWN: gui_nextEntry(); break;
 		case SCE_CTRL_UP: gui_prevEntry(); break;
-		case SCE_CTRL_CIRCLE: gui_openMenuParent(); break;
 		case SCE_CTRL_START: gui_close(); break;
 	}
 }

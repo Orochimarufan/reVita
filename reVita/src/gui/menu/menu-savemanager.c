@@ -16,17 +16,16 @@ enum SAVEMANAGER_ACTIONS{
 };
 
 void onButton_savemanager(uint32_t btn){
-	switch (btn) {
-		case SCE_CTRL_CROSS:
-			switch (gui_getEntry()->dataUint){
-				case SAVEMANAGER_BACKUP:   	sysactions_saveBackup(); break;
-				case SAVEMANAGER_RESTORE:   sysactions_saveRestore(); break;
-				case SAVEMANAGER_CLEAR: 	sysactions_saveDelete(); break;
-				case SAVEMANAGER_CLEAR_ALL: sysactions_saveDeleteAll(); break;
-				default: break;
-			}
-			break;
-		default: onButton_generic(btn);
+	if (btn == gui_confirmButton) {
+		switch (gui_getEntry()->dataUint){
+			case SAVEMANAGER_BACKUP:   	sysactions_saveBackup(); break;
+			case SAVEMANAGER_RESTORE:   sysactions_saveRestore(); break;
+			case SAVEMANAGER_CLEAR: 	sysactions_saveDelete(); break;
+			case SAVEMANAGER_CLEAR_ALL: sysactions_saveDeleteAll(); break;
+			default: break;
+		}
+	} else {
+		onButton_generic(btn);
 	}
 }
 
@@ -47,7 +46,7 @@ static struct Menu menu_savemanager = (Menu){
 	.id = MENU_SAVEMANAGER_ID, 
 	.parent = MENU_MAIN_ID,
 	.name = "$/ SAVE MANAGER", 
-	.footer = 	"$XSELECT                 $CBACK $:CLOSE",
+	.footer = 	"$kSELECT                 $nBACK $:CLOSE",
 	.onButton = onButton_savemanager,
 	.num = SIZE(menu_savemanager_entries), 
 	.entries = menu_savemanager_entries};

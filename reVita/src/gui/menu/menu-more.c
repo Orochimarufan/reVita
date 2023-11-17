@@ -30,7 +30,7 @@ static struct Menu menu_more = (Menu){
 	.parent = MENU_MAIN_PROFILE_ID,
 	.name = "$| PROFILE > COMPATIBILITY", 
 	.footer = 	"$<$>${$}CHANGE $SRESET $;RESET ALL     "
-				"$CBACK                          $:CLOSE",
+				"$nBACK                          $:CLOSE",
 	.onButton = onButton_more,
 	.num = SIZE(menu_more_entries), 
 	.entries = menu_more_entries};

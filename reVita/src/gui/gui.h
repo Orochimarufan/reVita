@@ -108,6 +108,8 @@ typedef struct MenuEntry{
 	char** dataPEStr;
 } MenuEntry;
 
+extern uint32_t gui_confirmButton;
+extern uint32_t gui_cancelButton;
 extern uint8_t gui_isOpen;
 extern uint8_t gui_lines;
 extern struct Menu* gui_menu;

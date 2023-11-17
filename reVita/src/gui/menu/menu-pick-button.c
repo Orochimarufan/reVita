@@ -1,3 +1,4 @@
+#include <psp2common/ctrl.h>
 #include <vitasdkkern.h>
 #include "../../vitasdkext.h"
 #include "../../common.h"
@@ -9,12 +10,10 @@
 
 void onButton_pickButton(uint32_t btn){
 	uint32_t* btnP = gui_menu->dataPtr;
-	switch (btn) {
-		case SCE_CTRL_SQUARE:
-			btn_toggle(btnP, gui_getEntry()->dataUint);
-			break;
-		case SCE_CTRL_CROSS:
-			if (!*btnP) break;
+	if (btn == SCE_CTRL_SQUARE) {
+		btn_toggle(btnP, gui_getEntry()->dataUint);
+	} else if (btn == gui_confirmButton) {
+		if (*btnP) {
 			if (gui_menu->next == MENU_REMAP_ID){
 				if (ui_ruleEditedIdx >= 0) 
 					profile.remaps[ui_ruleEditedIdx] = ui_ruleEdited;
@@ -22,12 +21,13 @@ void onButton_pickButton(uint32_t btn){
 					profile_addRemapRule(ui_ruleEdited);
 			}
 			gui_openMenuNext();
-			break;
-		case SCE_CTRL_CIRCLE: gui_openMenuPrev(); break;
-		case SCE_CTRL_TRIANGLE: 
-			*btnP = 0;
-			break;
-		default: onButton_generic(btn);
+		}
+	} else if (btn == gui_cancelButton) {
+		gui_openMenuPrev();
+	} else if (btn == SCE_CTRL_TRIANGLE) {
+		*btnP = 0;
+	} else {
+		onButton_generic(btn);
 	}
 }
 
@@ -71,8 +71,8 @@ static struct Menu menu_pick_button = (Menu){
 	.id = MENU_PICK_BUTTON_ID, 
 	.parent = MENU_REMAP_TRIGGER_TYPE_ID,
 	.name = "BUTTONS", 
-	.footer = 	"$SSELECT $XCONTINUE $TCLEAR ALL        "
-				"$CBACK                          $:CLOSE",
+	.footer = 	"$SSELECT $kCONTINUE $TCLEAR ALL        "
+				"$nBACK                          $:CLOSE",
 	.onButton = onButton_pickButton,
 	.onDrawHeader = onDrawHeader_pickButton,
 	.num = SIZE(menu_pick_button_entries), 

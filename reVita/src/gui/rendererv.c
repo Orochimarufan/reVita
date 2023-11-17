@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include "gui.h"
 #include "img/font.h"
 #include "img/icons.h"
 #include "img/icons-font.h"
@@ -44,6 +45,12 @@ void rendererv_drawChar(char character, int x, int y){
 }
 
 void rendererv_drawCharIcon(char character, int x, int y){
+	switch(character) {
+		case ICON_BTN_CONFIRM:
+			character = (gui_confirmButton == SCE_CTRL_CIRCLE) ? ICON_BTN_CIRCLE : ICON_BTN_CROSS; break;
+		case ICON_BTN_CANCEL:
+			character = (gui_confirmButton == SCE_CTRL_CIRCLE) ? ICON_BTN_CROSS : ICON_BTN_CIRCLE; break;
+	}
 	rendererv_drawImage(x, y - 1, ICON_W, ICON_H, &ICON[character * 60]);
 }
 

@@ -114,6 +114,11 @@ void onButton_pickTouchPoint(uint32_t btn){
 	TouchPoints2 size = T_SIZE[port];
 	switch (btn) {
 		case SCE_CTRL_CROSS:
+		case SCE_CTRL_CIRCLE:
+			if (btn == gui_cancelButton) {
+				gui_openMenuPrev();
+				break;
+			}
 			if(gui_menu->next == MENU_REMAP_ID){
 				if (ui_ruleEditedIdx >= 0) 
 					profile.remaps[ui_ruleEditedIdx] = ui_ruleEdited;
@@ -133,7 +138,6 @@ void onButton_pickTouchPoint(uint32_t btn){
 				case POINT_1_Y: ra->param.tPoint.y = max(ra->param.tPoint.y - 1, size.a.y); break;
 			}
 			break;
-		case SCE_CTRL_CIRCLE: gui_openMenuPrev();
 		default: onButton_generic(btn);
 	}
 }
@@ -144,6 +148,11 @@ void onButton_pickTouchZone(uint32_t btn){
 	TouchPoints2 size = T_SIZE[port];
 	switch (btn) {
 		case SCE_CTRL_CROSS:
+		case SCE_CTRL_CIRCLE:
+			if (btn == gui_cancelButton) {
+				gui_openMenuPrev();
+				break;
+			}
 			if(gui_menu->next == MENU_REMAP_ID){
 				if (ui_ruleEditedIdx >= 0) 
 					profile.remaps[ui_ruleEditedIdx] = ui_ruleEdited;
@@ -167,7 +176,6 @@ void onButton_pickTouchZone(uint32_t btn){
 				case POINT_2_Y: ra->param.tPoints.b.y = max(ra->param.tPoints.b.y - 1, size.a.y); break;
 			}
 			break;
-		case SCE_CTRL_CIRCLE: gui_openMenuPrev();
 		default: onButton_generic(btn);
 	}
 }
@@ -213,7 +221,7 @@ static struct Menu menu_pick_touch_point = (Menu){
 	.parent = MENU_REMAP_EMU_TYPE_ID,
 	.name = "$i SELECT TOUCH POINT", 
 	.footer = 	"$U$uCHANGE $<$>CHANGE ${$}FASTER       "
-				"$CBACK                          $:CLOSE", 
+				"$nBACK                          $:CLOSE", 
 	.onInput = onInput_touchPicker,
 	.onButton = onButton_pickTouchPoint,
 	.onDraw = onDraw_pickTouchPoint,
@@ -231,7 +239,7 @@ static struct Menu menu_pick_touch_zone = (Menu){
 	.parent = MENU_REMAP_TRIGGER_TYPE_ID,
 	.name = "$i SELECT TOUCH ZONE", 
 	.footer = 	"$U$uCHANGE $<$>CHANGE ${$}FASTER       "
-				"$CBACK                          $:CLOSE", 
+				"$nBACK                          $:CLOSE", 
 	.onInput = onInput_touchPicker,
 	.onButton = onButton_pickTouchZone,
 	.onDraw = onDraw_pickTouchZone,
@@ -249,7 +257,7 @@ static struct Menu menu_pick_touch_swipe = (Menu){
 	.parent = MENU_REMAP_TRIGGER_TYPE_ID,
 	.name = "$j SELECT SWIPE POINTS", 
 	.footer = 	"$U$uCHANGE $<$>CHANGE ${$}FASTER       "
-				"$CBACK                          $:CLOSE", 
+				"$nBACK                          $:CLOSE", 
 	.onInput = onInput_touchPicker,
 	.onButton = onButton_pickTouchZone,
 	.onDraw = onDraw_pickTouchZone,

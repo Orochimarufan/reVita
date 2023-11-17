@@ -21,7 +21,7 @@ static struct Menu menu_turbo = (Menu){
 	.parent = MENU_MAIN_PROFILE_ID,
 	.name = "$K PROFILE > TURBO", 
 	.footer = 	"$<$>${$}CHANGE $SRESET $;RESET ALL     "
-				"$CBACK                          $:CLOSE",
+				"$nBACK                          $:CLOSE",
 	.onButton = onButton_turbo,
 	.num = SIZE(menu_turbo_entries), 
 	.entries = menu_turbo_entries};

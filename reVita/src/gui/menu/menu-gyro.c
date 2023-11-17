@@ -1,3 +1,4 @@
+#include <psp2common/ctrl.h>
 #include <vitasdkkern.h>
 #include "../../main.h"
 #include "../../common.h"
@@ -15,20 +16,18 @@ char* STR_DEADBAND[3] = {
 };
 
 void onButton_gyro(uint32_t btn){
-	switch (btn) {
-		case SCE_CTRL_SELECT: profile_resetGyro(); break;
-		case SCE_CTRL_CROSS:
-			if (gui_getEntry()->type == COMMAND_TYPE 
-					&& gui_getEntry()->dataUint == REMAP_SYS_CALIBRATE_MOTION){
-				sysactions_calibrateMotion();
-			}
-			break;
-		default: 
-			if (gui_getEntry()->type == COMMAND_TYPE)
-				onButton_generic(btn);
-			else
-				onButton_genericEntries(btn);
-			break;
+	if (btn == SCE_CTRL_SELECT) {
+		profile_resetGyro();
+	} else if (btn == gui_confirmButton) {
+		if (gui_getEntry()->type == COMMAND_TYPE 
+				&& gui_getEntry()->dataUint == REMAP_SYS_CALIBRATE_MOTION){
+			sysactions_calibrateMotion();
+		}
+	} else {
+		if (gui_getEntry()->type == COMMAND_TYPE)
+			onButton_generic(btn);
+		else
+			onButton_genericEntries(btn);
 	}
 }
 
@@ -59,7 +58,7 @@ static struct Menu menu_gyro = (Menu){
 	.parent = MENU_MAIN_PROFILE_ID,
 	.name = "$Q PROFILE > GYROSCOPE", 
 	.footer = 	"$<$>${$}CHANGE $SRESET $;RESET ALL     "
-				"$CBACK                          $:CLOSE",
+				"$nBACK                          $:CLOSE",
 	.onButton = onButton_gyro,
 	.num = SIZE(menu_gyro_entries), 
 	.entries = menu_gyro_entries};

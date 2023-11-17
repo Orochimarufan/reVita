@@ -121,16 +121,17 @@ void generateRemapRuleName(char* str, struct RemapRule* rule){
 }
 
 void onButton_remap(uint32_t btn){
+	if (btn == gui_confirmButton) {
+		if (gui_getEntry()->dataUint != NEW_RULE_IDX){
+			ui_ruleEdited = profile.remaps[gui_getEntry()->dataUint];
+			ui_ruleEditedIdx = gui_getEntry()->dataUint;
+		} else {
+			ui_ruleEditedIdx = -1;
+		}
+		gui_openMenu(MENU_REMAP_TRIGGER_TYPE_ID); 
+		return;
+	}
 	switch (btn) {
-		case SCE_CTRL_CROSS: 
-			if (gui_getEntry()->dataUint != NEW_RULE_IDX){
-				ui_ruleEdited = profile.remaps[gui_getEntry()->dataUint];
-				ui_ruleEditedIdx = gui_getEntry()->dataUint;
-			} else {
-				ui_ruleEditedIdx = -1;
-			}
-			gui_openMenu(MENU_REMAP_TRIGGER_TYPE_ID); 
-			break;
 		case SCE_CTRL_SQUARE:
 			if (gui_getEntry()->dataUint != NEW_RULE_IDX)
 				profile.remaps[gui_getEntry()->dataUint].disabled = !profile.remaps[gui_getEntry()->dataUint].disabled;
@@ -164,115 +165,108 @@ void onButton_remap(uint32_t btn){
 	}
 }
 void onButton_remapTriggerType(uint32_t btn){
-	switch (btn) {
-		case SCE_CTRL_CROSS:
-			ui_ruleEdited.trigger.type = gui_getEntry()->dataUint;
-			switch(gui_getEntry()->dataUint){
-				case REMAP_TYPE_BUTTON: gui_openMenuSmartPtr(MENU_PICK_BUTTON_ID, 
-					gui_menu->id, MENU_REMAP_EMU_TYPE_ID, &ui_ruleEdited.trigger.param.btn); break;
-				case REMAP_TYPE_LEFT_ANALOG: gui_openMenuSmartPtr(MENU_PICK_ANALOG_LEFT_ID,
-					gui_menu->id, MENU_REMAP_EMU_TYPE_ID, &ui_ruleEdited.trigger.action); break; 
-				case REMAP_TYPE_RIGHT_ANALOG: gui_openMenuSmartPtr(MENU_PICK_ANALOG_RIGHT_ID,
-					gui_menu->id, MENU_REMAP_EMU_TYPE_ID, &ui_ruleEdited.trigger.action); break;
-				case REMAP_TYPE_FRONT_TOUCH_ZONE: gui_openMenu(MENU_REMAP_TRIGGER_TOUCH_FRONT_ID); break;
-				case REMAP_TYPE_BACK_TOUCH_ZONE: gui_openMenu(MENU_REMAP_TRIGGER_TOUCH_BACK_ID); break;
-				case REMAP_TYPE_GYROSCOPE: gui_openMenu(MENU_REMAP_TRIGGER_GYRO_ID); break;
-			};
-			break;
-		default: onButton_generic(btn);
+	if (btn == gui_confirmButton) {
+		ui_ruleEdited.trigger.type = gui_getEntry()->dataUint;
+		switch(gui_getEntry()->dataUint){
+			case REMAP_TYPE_BUTTON: gui_openMenuSmartPtr(MENU_PICK_BUTTON_ID, 
+				gui_menu->id, MENU_REMAP_EMU_TYPE_ID, &ui_ruleEdited.trigger.param.btn); break;
+			case REMAP_TYPE_LEFT_ANALOG: gui_openMenuSmartPtr(MENU_PICK_ANALOG_LEFT_ID,
+				gui_menu->id, MENU_REMAP_EMU_TYPE_ID, &ui_ruleEdited.trigger.action); break; 
+			case REMAP_TYPE_RIGHT_ANALOG: gui_openMenuSmartPtr(MENU_PICK_ANALOG_RIGHT_ID,
+				gui_menu->id, MENU_REMAP_EMU_TYPE_ID, &ui_ruleEdited.trigger.action); break;
+			case REMAP_TYPE_FRONT_TOUCH_ZONE: gui_openMenu(MENU_REMAP_TRIGGER_TOUCH_FRONT_ID); break;
+			case REMAP_TYPE_BACK_TOUCH_ZONE: gui_openMenu(MENU_REMAP_TRIGGER_TOUCH_BACK_ID); break;
+			case REMAP_TYPE_GYROSCOPE: gui_openMenu(MENU_REMAP_TRIGGER_GYRO_ID); break;
+		};
+	} else {
+		onButton_generic(btn);
 	}
 }
 void onButton_remapTriggerTouch(uint32_t btn){
-	switch (btn) {
-		case SCE_CTRL_CROSS:
-			ui_ruleEdited.trigger.action = gui_getEntry()->dataUint;
-			if (gui_getEntry()->dataUint == REMAP_TOUCH_CUSTOM){
-				gui_openMenuSmartPtr(MENU_PICK_TOUCH_ZONE_ID, gui_menu->id, MENU_REMAP_EMU_TYPE_ID, 
-					&ui_ruleEdited.trigger);
-				break;
-			}
+	if (btn == gui_confirmButton) {
+		ui_ruleEdited.trigger.action = gui_getEntry()->dataUint;
+		if (gui_getEntry()->dataUint == REMAP_TOUCH_CUSTOM){
+			gui_openMenuSmartPtr(MENU_PICK_TOUCH_ZONE_ID, gui_menu->id, MENU_REMAP_EMU_TYPE_ID, 
+				&ui_ruleEdited.trigger);
+		} else {
 			//ToDo Set custom touch zones here
 			gui_openMenu(MENU_REMAP_EMU_TYPE_ID);
-			break;
-		default: onButton_generic(btn);
+		}
+	} else {
+		 onButton_generic(btn);
 	}
 }
 void onButton_remapTriggerGyro(uint32_t btn){
-	switch (btn) {
-		case SCE_CTRL_CROSS:
-			ui_ruleEdited.trigger.action = gui_getEntry()->dataUint;
-			gui_openMenu(MENU_REMAP_EMU_TYPE_ID);
-			break;
-		default: onButton_generic(btn);
+	if (btn == gui_confirmButton) {
+		ui_ruleEdited.trigger.action = gui_getEntry()->dataUint;
+		gui_openMenu(MENU_REMAP_EMU_TYPE_ID);
+	} else {
+		onButton_generic(btn);
 	}
 }
 void onButton_remapEmuType(uint32_t btn){
-	switch (btn) {
-		case SCE_CTRL_CROSS:
-			ui_ruleEdited.emu.type = gui_getEntry()->dataUint;
-			switch(gui_getEntry()->dataUint){
-				case REMAP_TYPE_BUTTON: 
-					gui_openMenuSmartPtr(MENU_PICK_BUTTON_ID, 
-						gui_menu->id, MENU_REMAP_ID, &ui_ruleEdited.emu.param.btn); 
-					break;
-				case REMAP_TYPE_LEFT_ANALOG:
-				case REMAP_TYPE_LEFT_ANALOG_DIGITAL:
-					gui_openMenuSmartPtr(MENU_PICK_ANALOG_LEFT_ID,
-						gui_menu->id, MENU_REMAP_ID, &ui_ruleEdited.emu.action); 
-					break;
-				case REMAP_TYPE_RIGHT_ANALOG:
-				case REMAP_TYPE_RIGHT_ANALOG_DIGITAL: 
-					gui_openMenuSmartPtr(MENU_PICK_ANALOG_RIGHT_ID,
-						gui_menu->id, MENU_REMAP_ID, &ui_ruleEdited.emu.action); 
-					break;
-				case REMAP_TYPE_FRONT_TOUCH_POINT: gui_openMenu(MENU_REMAP_EMU_TOUCH_FRONT_ID); break;
-				case REMAP_TYPE_BACK_TOUCH_POINT: gui_openMenu(MENU_REMAP_EMU_TOUCH_BACK_ID); break;
-				case REMAP_TYPE_SYSACTIONS: gui_openMenu(MENU_REMAP_EMU_SYSACTIONS_ID); break;
-				case REMAP_TYPE_REMAPSV_ACTIONS: gui_openMenu(MENU_REMAP_EMU_REMAPSV_ID); break;
-				case REMAP_TYPE_DISABLED: 
-					profile_addRemapRule(ui_ruleEdited);
-					gui_openMenu(MENU_REMAP_ID);
-					break;
-			};
-			break;
-		default: onButton_generic(btn);
+	if (btn == gui_confirmButton) {
+		ui_ruleEdited.emu.type = gui_getEntry()->dataUint;
+		switch(gui_getEntry()->dataUint){
+			case REMAP_TYPE_BUTTON: 
+				gui_openMenuSmartPtr(MENU_PICK_BUTTON_ID, 
+					gui_menu->id, MENU_REMAP_ID, &ui_ruleEdited.emu.param.btn); 
+				break;
+			case REMAP_TYPE_LEFT_ANALOG:
+			case REMAP_TYPE_LEFT_ANALOG_DIGITAL:
+				gui_openMenuSmartPtr(MENU_PICK_ANALOG_LEFT_ID,
+					gui_menu->id, MENU_REMAP_ID, &ui_ruleEdited.emu.action); 
+				break;
+			case REMAP_TYPE_RIGHT_ANALOG:
+			case REMAP_TYPE_RIGHT_ANALOG_DIGITAL: 
+				gui_openMenuSmartPtr(MENU_PICK_ANALOG_RIGHT_ID,
+					gui_menu->id, MENU_REMAP_ID, &ui_ruleEdited.emu.action); 
+				break;
+			case REMAP_TYPE_FRONT_TOUCH_POINT: gui_openMenu(MENU_REMAP_EMU_TOUCH_FRONT_ID); break;
+			case REMAP_TYPE_BACK_TOUCH_POINT: gui_openMenu(MENU_REMAP_EMU_TOUCH_BACK_ID); break;
+			case REMAP_TYPE_SYSACTIONS: gui_openMenu(MENU_REMAP_EMU_SYSACTIONS_ID); break;
+			case REMAP_TYPE_REMAPSV_ACTIONS: gui_openMenu(MENU_REMAP_EMU_REMAPSV_ID); break;
+			case REMAP_TYPE_DISABLED: 
+				profile_addRemapRule(ui_ruleEdited);
+				gui_openMenu(MENU_REMAP_ID);
+				break;
+		};
+	} else {
+		onButton_generic(btn);
 	}
 }
 void onButton_remapEmuTouch(uint32_t btn){
-	switch (btn) {
-		case SCE_CTRL_CROSS:
-			ui_ruleEdited.emu.action = gui_getEntry()->dataUint;
-			if (gui_getEntry()->dataUint == REMAP_TOUCH_CUSTOM || 
-					gui_getEntry()->dataUint == REMAP_TOUCH_SWIPE_SMART_DPAD || 
-					gui_getEntry()->dataUint == REMAP_TOUCH_SWIPE_SMART_L || 
-					gui_getEntry()->dataUint == REMAP_TOUCH_SWIPE_SMART_R){
-				gui_openMenuSmartPtr(MENU_PICK_TOUCH_POINT_ID, gui_menu->id, MENU_REMAP_ID, &ui_ruleEdited.emu);
-				break;
-			} else if (gui_getEntry()->dataUint == REMAP_TOUCH_SWIPE){
-				gui_openMenuSmartPtr(MENU_PICK_TOUCH_SWIPE_ID, gui_menu->id, MENU_REMAP_ID, &ui_ruleEdited.emu);
-				break;
-			}
+	if (btn == gui_confirmButton) {
+		ui_ruleEdited.emu.action = gui_getEntry()->dataUint;
+		if (gui_getEntry()->dataUint == REMAP_TOUCH_CUSTOM || 
+				gui_getEntry()->dataUint == REMAP_TOUCH_SWIPE_SMART_DPAD || 
+				gui_getEntry()->dataUint == REMAP_TOUCH_SWIPE_SMART_L || 
+				gui_getEntry()->dataUint == REMAP_TOUCH_SWIPE_SMART_R){
+			gui_openMenuSmartPtr(MENU_PICK_TOUCH_POINT_ID, gui_menu->id, MENU_REMAP_ID, &ui_ruleEdited.emu);
+		} else if (gui_getEntry()->dataUint == REMAP_TOUCH_SWIPE){
+			gui_openMenuSmartPtr(MENU_PICK_TOUCH_SWIPE_ID, gui_menu->id, MENU_REMAP_ID, &ui_ruleEdited.emu);
+		} else {
 			if (ui_ruleEditedIdx >= 0) 
 				profile.remaps[ui_ruleEditedIdx] = ui_ruleEdited;
 			else
 				profile_addRemapRule(ui_ruleEdited);
 			gui_openMenu(MENU_REMAP_ID);
-			break;
-		default: onButton_generic(btn);
+		}
+	} else {
+		onButton_generic(btn);
 	}
 }
 
 void onButton_remapEmuActions(uint32_t btn){
-	switch (btn) {
-		case SCE_CTRL_CROSS:
-			ui_ruleEdited.emu.action = gui_getEntry()->dataUint;
-			if (ui_ruleEditedIdx >= 0) 
-				profile.remaps[ui_ruleEditedIdx] = ui_ruleEdited;
-			else
-				profile_addRemapRule(ui_ruleEdited);
-			gui_openMenu(MENU_REMAP_ID);
-			break;
-		default: onButton_generic(btn);
+	if (btn == gui_confirmButton) {
+		ui_ruleEdited.emu.action = gui_getEntry()->dataUint;
+		if (ui_ruleEditedIdx >= 0) 
+			profile.remaps[ui_ruleEditedIdx] = ui_ruleEdited;
+		else
+			profile_addRemapRule(ui_ruleEdited);
+		gui_openMenu(MENU_REMAP_ID);
+	} else {
+		onButton_generic(btn);
 	}
 }
 
@@ -323,8 +317,8 @@ static struct Menu menu_remap = (Menu){
 	.id = MENU_REMAP_ID, 
 	.parent = MENU_MAIN_PROFILE_ID,
 	.name = "$X PROFILE > REMAP RULES", 
-	.footer = 	"$XSELECT $SDISABLE $TPROPAGATE $;REMOVE"
-				"${STICKY $}TURBO         $CBACK $:CLOSE",
+	.footer = 	"$kSELECT $SDISABLE $TPROPAGATE $;REMOVE"
+				"${STICKY $}TURBO         $nBACK $:CLOSE",
 	.onButton = onButton_remap,
 	.onDraw = onDraw_remap,
 	.onBuild = onBuild_remap,
@@ -342,7 +336,7 @@ static struct Menu menu_remap_trigger_type = (Menu){
 	.id = MENU_REMAP_TRIGGER_TYPE_ID, 
 	.parent = MENU_REMAP_ID,
 	.name = "SELECT TRIGGER", 
-	.footer = 	"$XSELECT                 $CBACK $:CLOSE",
+	.footer = 	"$kSELECT                 $nBACK $:CLOSE",
 	.onButton = onButton_remapTriggerType,
 	.num = SIZE(menu_remap_trigger_type_entries),
 	.entries = menu_remap_trigger_type_entries};
@@ -361,7 +355,7 @@ static struct Menu menu_remap_trigger_front_touch = (Menu){
 	.id = MENU_REMAP_TRIGGER_TOUCH_FRONT_ID, 
 	.parent = MENU_REMAP_TRIGGER_TYPE_ID,
 	.name = "$F SELECT TOUCH POINT", 
-	.footer = 	"$XSELECT                 $CBACK $:CLOSE",
+	.footer = 	"$kSELECT                 $nBACK $:CLOSE",
 	.onButton = onButton_remapTriggerTouch,
 	.num = SIZE(menu_remap_trigger_front_touch_entries),
 	.entries = menu_remap_trigger_front_touch_entries};
@@ -380,7 +374,7 @@ static struct Menu menu_remap_trigger_back_touch = (Menu){
 	.id = MENU_REMAP_TRIGGER_TOUCH_BACK_ID, 
 	.parent = MENU_REMAP_TRIGGER_TYPE_ID,
 	.name = "$B SELECT TOUCH POINT", 
-	.footer = 	"$XSELECT                 $CBACK $:CLOSE",
+	.footer = 	"$kSELECT                 $nBACK $:CLOSE",
 	.onButton = onButton_remapTriggerTouch,
 	.num = SIZE(menu_remap_trigger_back_touch_entries),
 	.entries = menu_remap_trigger_back_touch_entries};
@@ -404,7 +398,7 @@ static struct Menu menu_remap_trigger_gyro = (Menu){
 	.id = MENU_REMAP_TRIGGER_GYRO_ID, 
 	.parent = MENU_REMAP_TRIGGER_TYPE_ID,
 	.name = "$E SELECT GYRO MOVEMENT", 
-	.footer = 	"$XSELECT                 $CBACK $:CLOSE",
+	.footer = 	"$kSELECT                 $nBACK $:CLOSE",
 	.onButton = onButton_remapTriggerGyro,
 	.num = SIZE(menu_remap_trigger_gyro_entries),
 	.entries = menu_remap_trigger_gyro_entries};
@@ -424,7 +418,7 @@ static struct Menu menu_remap_emu_type = (Menu){
 	.id = MENU_REMAP_EMU_TYPE_ID, 
 	.parent = MENU_REMAP_ID,
 	.name = "SELECT EMU", 
-	.footer = 	"$XSELECT                 $CBACK $:CLOSE",
+	.footer = 	"$kSELECT                 $nBACK $:CLOSE",
 	.onButton = onButton_remapEmuType,
 	.num = SIZE(menu_remap_emu_type_entries), 
 	.entries = menu_remap_emu_type_entries};
@@ -446,7 +440,7 @@ static struct Menu menu_remap_emu_touch_front = (Menu){
 	.id = MENU_REMAP_EMU_TOUCH_FRONT_ID, 
 	.parent = MENU_REMAP_EMU_TYPE_ID,
 	.name = "$F SELECT TOUCH POINT", 
-	.footer = 	"$XSELECT                 $CBACK $:CLOSE",
+	.footer = 	"$kSELECT                 $nBACK $:CLOSE",
 	.onButton = onButton_remapEmuTouch,
 	.num = SIZE(menu_remap_emu_touch_front_entries),
 	.entries = menu_remap_emu_touch_front_entries};
@@ -468,7 +462,7 @@ static struct Menu menu_remap_emu_touch_back = (Menu){
 	.id = MENU_REMAP_EMU_TOUCH_BACK_ID, 
 	.parent = MENU_REMAP_EMU_TYPE_ID,
 	.name = "$B SELECT TOUCH POINT", 
-	.footer = 	"$XSELECT                 $CBACK $:CLOSE",
+	.footer = 	"$kSELECT                 $nBACK $:CLOSE",
 	.onButton = onButton_remapEmuTouch,
 	.num = SIZE(menu_remap_emu_touch_back_entries),
 	.entries = menu_remap_emu_touch_back_entries};
@@ -490,7 +484,7 @@ static struct MenuEntry menu_remap_emu_sysactions_entries[] = {
 static struct Menu menu_remap_emu_sysactions = (Menu){
 	.id = MENU_REMAP_EMU_SYSACTIONS_ID, 
 	.name = "$! SYSTEM ACTIONS",
-	.footer = 	"$XSELECT                 $CBACK $:CLOSE",
+	.footer = 	"$kSELECT                 $nBACK $:CLOSE",
 	.onButton = onButton_remapEmuActions,
 	.num = SIZE(menu_remap_emu_sysactions_entries),
 	.entries = menu_remap_emu_sysactions_entries};
@@ -509,7 +503,7 @@ static struct MenuEntry menu_remap_emu_remapsv_entries[] = {
 static struct Menu menu_remap_emu_remapsv = (Menu){
 	.id = MENU_REMAP_EMU_REMAPSV_ID, 
 	.name = "$! REMAPSV2 CONFIG OPTIONS",
-	.footer = 	"$XSELECT                 $CBACK $:CLOSE",
+	.footer = 	"$kSELECT                 $nBACK $:CLOSE",
 	.onButton = onButton_remapEmuActions,
 	.num = SIZE(menu_remap_emu_remapsv_entries),
 	.entries = menu_remap_emu_remapsv_entries};

@@ -1,3 +1,4 @@
+#include <psp2/system_param.h>
 #include <vitasdkkern.h>
 #include "../fio/profile.h"
 #include "../fio/settings.h"
@@ -78,6 +79,8 @@ SceUID mem_uid;
 int64_t tickUIOpen = 0;
 int64_t tickUIClose = 0;
 int64_t tickMenuOpen = 0;
+uint32_t gui_confirmButton = SCE_CTRL_CROSS;
+uint32_t gui_cancelButton = SCE_CTRL_CIRCLE;
 uint8_t gui_isOpen = false;
 uint8_t gui_isBlankFrame = false;
 uint8_t gui_lines = 10;
@@ -247,8 +250,8 @@ void drawEmulatedPointersForPanel(uint32_t panel){
 	if (profile.entries[PR_TO_DRAW_NATIVE].v.b && !isPSTVTouchEmulation){
 		for (int i = 0; i < td[panel].reportNum; i++){
 			TouchPoint tp = (TouchPoint){
-				x: td[panel].report[i].x, 
-				y: td[panel].report[i].y};
+				.x = td[panel].report[i].x, 
+				.y = td[panel].report[i].y};
 			gui_drawTouchPointer(panel, &tp);
 		}
 	}
@@ -377,7 +380,7 @@ void gui_input(SceCtrlData *ctrl) {
 						//OnLongPress event
 						if (gui_menu->onButton)
 							gui_menu->onButton(HW_BUTTONS[i]);
-						else 
+						else
 							onButton_generic(HW_BUTTONS[i]);
 					}
 				} else {
@@ -393,7 +396,7 @@ void gui_input(SceCtrlData *ctrl) {
 				//OnPress event
 				if (gui_menu->onButton)
 					gui_menu->onButton(HW_BUTTONS[i]);
-				else 
+				else
 					onButton_generic(HW_BUTTONS[i]);
 			}
 		} else {
@@ -487,12 +490,16 @@ void gui_prevEntry(){
 	}
 }
 
-void gui_open(const SceDisplayFrameBuf *pParam){
+void gui_open(){
 	if (rendererv_allocVirtualFB() < 0){
 		LOG("memory allocation for menu failed\n");
 		gui_popupShowDanger("Error", "Buy more RAM !", TTL_POPUP_LONG);
 		return;
 	}
+	int btn_assign = SCE_SYSTEM_PARAM_ENTER_BUTTON_CROSS;
+	ksceRegMgrGetKeyInt("/CONFIG/SYSTEM", "button_assign", &btn_assign);
+	gui_confirmButton = btn_assign == SCE_SYSTEM_PARAM_ENTER_BUTTON_CIRCLE ? SCE_CTRL_CIRCLE : SCE_CTRL_CROSS;
+	gui_cancelButton = btn_assign == SCE_SYSTEM_PARAM_ENTER_BUTTON_CIRCLE ? SCE_CTRL_CROSS : SCE_CTRL_CIRCLE;
 	ksceKernelLockMutex(mutex_gui_uid, 1, NULL);
 	gui_setIdx(0);
 	gui_isOpen = true;
