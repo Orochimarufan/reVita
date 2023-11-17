@@ -35,7 +35,7 @@ bool readPixel(uint32_t x, uint32_t y, uint32_t w, uint32_t h, const unsigned ch
 
 void drawPixel(int32_t x, int32_t y, uint32_t color){
 	if (x >= 0 && x < fbWidth && y >= 0 && y < fbHeight)
-		ksceKernelMemcpyKernelToUser((uintptr_t)&fb_base[y * fbPitch + x], &color, sizeof(color));
+		ksceKernelMemcpyKernelToUser(&fb_base[y * fbPitch + x], &color, sizeof(color));
 }
 
 void renderer_blankFrame(){
@@ -44,7 +44,7 @@ void renderer_blankFrame(){
 	for(int i = 0; i < fbHeight; i++)
 		for(int j = 0; j < 4; j++)
 			ksceKernelMemcpyKernelToUser(
-				(uintptr_t)&fb_base[i * fbPitch + j * fbWidth / 4], &buff[0], sizeof(buff));
+				&fb_base[i * fbPitch + j * fbWidth / 4], &buff[0], sizeof(buff));
 	// for(int i = 0; i < fbHeight; i++)
 	// 	for(int j = 0; i < 1; i++)
 	// 		ksceKernelMemcpyKernelToUser(
@@ -111,7 +111,7 @@ void renderer_drawRectangle(uint32_t x, uint32_t y, uint32_t w, uint32_t h) {
 	uint32_t line[w];
 	memset(&line[0], color, sizeof(line));
 	for (int j = y; j < y + h; j++)
-		ksceKernelMemcpyKernelToUser((uintptr_t)&fb_base[j * fbPitch + x], &line[0], sizeof(line));
+		ksceKernelMemcpyKernelToUser(&fb_base[j * fbPitch + x], &line[0], sizeof(line));
 }
 
 void renderer_drawLine(int32_t x1, int32_t y1, int32_t x2, int32_t y2) {
@@ -203,7 +203,7 @@ void renderer_writeFromVFB(int64_t tickOpened, bool anim){
 			off = UI_CORNER_OFF[uiHeight - i];
 		}
 		ksceKernelMemcpyKernelToUser(
-			(uintptr_t)&fb_base[(ui_yCalculated + i) * fbPitch + ui_x + off],
+			&fb_base[(ui_yCalculated + i) * fbPitch + ui_x + off],
 			&vfb_base[(i + ui_cutout) * uiWidth + off],
 			sizeof(uint32_t) * (uiWidth - 2 * off));		
 	}

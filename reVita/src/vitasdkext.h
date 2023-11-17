@@ -1,6 +1,8 @@
 #ifndef _VITASDKEXT_H_
 #define _VITASDKEXT_H_
 
+#include <psp2common/ctrl.h>
+#include <psp2common/kernel/modulemgr.h>
 #include <sys/types.h>
 #include <psp2/touch.h>
 #include <psp2/appmgr.h> 
@@ -8,8 +10,6 @@
 typedef enum SceCtrlButtonsExt {
     SCE_CTRL_TOUCHPAD    = 0x04000000,             //!< Dualshock 4 Touchpad button
 	SCE_CTRL_MIC		 = 0x08000000,             //!< DualSense mic button
-    SCE_CTRL_L2          = SCE_CTRL_LTRIGGER,
-    SCE_CTRL_R2          = SCE_CTRL_RTRIGGER,
 } SceCtrlButtonsExt;
 
 typedef enum SceProcEvent {

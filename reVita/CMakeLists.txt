@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.14)
 
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   if(DEFINED ENV{VITASDK})
@@ -90,11 +90,16 @@ vita_create_self(${PROJECT_NAME}.skprx ${PROJECT_NAME}
   UNSAFE
   CONFIG export.yml
 )
-add_dependencies(${PROJECT_NAME}.skprx ${PROJECT_NAME})
- 
+
 vita_create_stubs(stubs ${PROJECT_NAME} export.yml KERNEL)
 
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/stubs/
-  DESTINATION lib
-  FILES_MATCHING PATTERN "*.a"
+if (NOT TARGET reVita_stub)
+  add_library(reVita_stub STATIC IMPORTED GLOBAL)
+  set_target_properties(reVita_stub PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/stubs/lib${PROJECT_NAME}_stub.a)
+endif()
+
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/stubs/lib${PROJECT_NAME}_stub.a
+  ${CMAKE_CURRENT_BINARY_DIR}/stubs/lib${PROJECT_NAME}_stub_weak.a
+  TYPE LIB
 )

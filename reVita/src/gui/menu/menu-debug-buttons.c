@@ -45,16 +45,16 @@ void onDraw_debugButtons(uint menuY){
 		rendererv_drawString(x += CHA_W*4, y, getBtnName(1 << i));
 	}
 	renderer_setColor(theme[COLOR_DEFAULT]);
-	rendererv_drawStringF(L_1, y += CHA_H, "$[: %i, $]: %i", 
-		ctrl.lt, ctrl.rt);
+	rendererv_drawStringF(L_1, y += CHA_H, "$[: %i, $]: %i, ${: %i, $}: %i", 
+		ctrl.lt, ctrl.rt, ctrl.l1, ctrl.r1);
 	rendererv_drawStringF(L_1, y += CHA_H, "$U: [%i, %i], $u[%i, %i]", 
 		ctrl.lx, ctrl.ly, ctrl.rx, ctrl.ry);
-	rendererv_drawStringF(L_1, y += CHA_H, "reserved0 : [%i, %i, %i, %i]", 
-		ctrl.reserved0[0], ctrl.reserved0[1], ctrl.reserved0[2], ctrl.reserved0[3]);
-	rendererv_drawStringF(L_1, y += CHA_H, "reserved1 : [%i, %i, %i, %i, %i,", 
-		ctrl.reserved1[0], ctrl.reserved1[1], ctrl.reserved1[2], ctrl.reserved1[3], ctrl.reserved1[4]);
-	rendererv_drawStringF(L_1, y += CHA_H, "             %i, %i, %i, %i, %i]", 
-		ctrl.reserved1[5], ctrl.reserved1[6], ctrl.reserved1[7], ctrl.reserved1[8], ctrl.reserved1[9]);
+	rendererv_drawStringF(L_1, y += CHA_H, "$^: %i, $>: %i, $v: %i, $>: %i",
+		ctrl.up, ctrl.right, ctrl.down, ctrl.left);
+	rendererv_drawStringF(L_1, y += CHA_H, "$T: %i, $C: %i, $X: %i, $S: %i", 
+		ctrl.triangle, ctrl.circle, ctrl.cross, ctrl.square);
+	rendererv_drawStringF(L_1, y += CHA_H, "reserved: [%i, %i, %i, %i]", 
+		ctrl.reserved[0], ctrl.reserved[1], ctrl.reserved[2], ctrl.reserved[3]);
 }
 
 bool isBtnClicked(uint data, uint dataPrev, uint btn){
