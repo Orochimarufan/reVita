@@ -2,6 +2,7 @@
 #define _REMAP_H_
 
 #include <psp2/touch.h>
+#include <psp2common/ctrl.h>
 #include <stdbool.h>
 
 #define BUFFERS_NUM             64

@@ -1,6 +1,9 @@
 #ifndef _THEME_H_
 #define _THEME_H_
 
+#include <stdint.h>
+#include <stdbool.h>
+
 enum THEME_ID{
 	THEME_DARK,
 	THEME_LIGHT,

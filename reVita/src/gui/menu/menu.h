@@ -1,6 +1,8 @@
 #ifndef _MENU_H_
 #define _MENU_H_
 
+#include "../gui.h"
+
 void onDraw_generic(uint32_t menuY);
 bool onDrawEntry_header(int x, int y, MenuEntry* me, bool isSelected, bool hasHeaders);
 bool onDrawEntry_profileEntry(int x, int y, MenuEntry* me, bool isSelected, bool hasHeaders);

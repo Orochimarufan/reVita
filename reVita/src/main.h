@@ -1,5 +1,6 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
+#include <psp2common/ctrl.h>
 #include <stdbool.h>
 #include <psp2/touch.h>
 #include <psp2/appmgr.h>

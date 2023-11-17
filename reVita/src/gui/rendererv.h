@@ -2,6 +2,7 @@
 #define _RENDERERV_H_
 
 #include <stdbool.h>
+#include <stdint.h>
 
 #define CHA_W  12		//Character size in pexels
 #define CHA_H  20

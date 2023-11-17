@@ -1,6 +1,8 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
+#include <stdint.h>
+
 #define HOOKS_NUM         17 // Hooked functions num
 
 extern char titleid[16];

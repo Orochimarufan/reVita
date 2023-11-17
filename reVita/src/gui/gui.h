@@ -3,6 +3,7 @@
 #include "../remap.h"
 #include "img/icons-font.h"
 #include "../fio/profile.h"
+#include <psp2common/display.h>
 
 #define UI_WIDTH            480
 #define UI_HEIGHT           272
@@ -17,7 +18,7 @@
 #define TTL_POPUP_SHORT		2##000##000
 #define TTL_POPUP_LONG		2##000##000
 
-;enum MENU_ID{
+enum MENU_ID{
 	MENU_MAIN_ID = 0,
 	MENU_MAIN_PROFILE_ID,
 	MENU_MAIN_SETTINGS_ID,

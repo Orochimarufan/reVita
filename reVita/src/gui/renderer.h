@@ -1,7 +1,9 @@
 #ifndef _RENDERER_H_
 #define _RENDERER_H_
 
+#include <psp2common/display.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #define CHA_W  12		//Character size in pexels
 #define CHA_H  20

@@ -1,6 +1,8 @@
 #ifndef _FIO_H_
 #define _FIO_H_
 
+#include <stdbool.h>
+
 bool fio_exist(const char *path);
 bool fio_readFile(char* buff, int size, char* path, char* name, char* ext);
 bool fio_writeFile(char* buff, int size, char* path, char* name, char* ext);
